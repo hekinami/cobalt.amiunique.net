@@ -1,4 +1,6 @@
-
+template_extensions:
+  - html
+  - liquid
 site:
   title: cobalt blog
   description: Blog Posts Go Here
