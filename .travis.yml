@@ -1,0 +1,5 @@
+lang: rust
+script:
+  - git config --global user.email "hekinami@amiunique.net"
+  - git config --global user.name "Zou Bibo"
+  - pwd
