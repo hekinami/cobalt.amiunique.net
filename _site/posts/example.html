@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>First Post</title>
+    </head>
+    <body>
+    <div>
+      <h2>First Post</h2>
+      <div id="outline-container-orgcb8575f" class="outline-2">
+<h2 id="orgcb8575f">OS Preparation</h2>
+<div class="outline-text-2" id="text-orgcb8575f">
+</div>
+<div id="outline-container-org432b812" class="outline-3">
+<h3 id="org432b812">Create VM Instances</h3>
+<div class="outline-text-3" id="text-org432b812">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-right">
+
+<col  class="org-right">
+
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Name</th>
+<th scope="col" class="org-left">Shape</th>
+<th scope="col" class="org-right">Pub ip</th>
+<th scope="col" class="org-right">Priv ip</th>
+<th scope="col" class="org-left">Data disk</th>
+<th scope="col" class="org-left">Usage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">dberp01</td>
+<td class="org-left">oc6</td>
+<td class="org-right">129.150.102.93</td>
+<td class="org-right">172.28.110.19</td>
+<td class="org-left">5TB + 2TB stage</td>
+<td class="org-left">DB</td>
+</tr>
+
+<tr>
+<td class="org-left">apperpu01</td>
+<td class="org-left">oc4</td>
+<td class="org-right">129.150.101.41</td>
+<td class="org-right">172.28.110.17</td>
+<td class="org-left">300GB</td>
+<td class="org-left">Primary EBS node</td>
+</tr>
+
+<tr>
+<td class="org-left">apperpu02</td>
+<td class="org-left">oc4</td>
+<td class="org-right">129.150.101.53</td>
+<td class="org-right">172.18.110.18</td>
+<td class="org-left">300GB</td>
+<td class="org-left">Secondary EBS node</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div id="outline-container-orgd250b78" class="outline-3">
+<h3 id="orgd250b78">User</h3>
+<div class="outline-text-3" id="text-orgd250b78">
+<p>
+In all nodes
+</p>
+<pre class="example">
+$ sudo useradd erp28 -u 2328
+$ sudo groupadd dba -g 23
+$ sudo usermod -g dba erp28
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orge54ba99" class="outline-3">
+<h3 id="orge54ba99">Package</h3>
+<div class="outline-text-3" id="text-orge54ba99">
+<ol class="org-ol">
+<li><p>
+Revise /etc/yum.repos.d/public-yum-ol6.repo in all nodes. Modify the `ol6_addons' section as following
+</p>
+<pre class="example">
+[ol6_addons]
+name=Oracle Linux $releasever Add ons ($basearch)
+baseurl=http://public-yum.oracle.com/repo/OracleLinux/OL6/addons/$basearch/
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-oracle
+gpgcheck=1
+enabled=1
+</pre></li>
+<li><p>
+In DB node dberpu01
+</p>
+<pre class="example">
+$ sudo yum install oracle-rdbms-server-11gR2-preinstall.x86_64
+</pre></li>
+
+<li><p>
+In app tier nodes apperpu01, apperpu02
+</p>
+<pre class="example">
+$ sudo yum install oracle-ebs-server-R12-preinstall.x86_64
+</pre></li>
+
+<li><p>
+Upgrade this package to prevent potential LVM related problems.
+</p>
+<pre class="example">
+$ sudo yum upgrade device-mapper-libs
+</pre></li>
+
+<li><p>
+Install the following packages for remote operations
+</p>
+<pre class="example">
+$ sudo yum install tigervnc-server xterm twm
+</pre></li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-org0969381" class="outline-3">
+<h3 id="org0969381">Revise /etc/security/limits.conf</h3>
+<div class="outline-text-3" id="text-org0969381">
+<p>
+In all nodes, replace `oracle' with `erp28'
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgb1d98c8" class="outline-3">
+<h3 id="orgb1d98c8">Revise /etc/hosts</h3>
+<div class="outline-text-3" id="text-orgb1d98c8">
+<p>
+Add the following content to all nodes
+</p>
+<pre class="example">
+172.28.110.11	otdu01	otdu01.ckh.oc.com
+172.28.110.12	otdu02	otdu02.ckh.oc.com
+172.28.110.13	ftpu01	ftpu01.ckh.oc.com
+172.28.110.14	ftpu02	ftpu02.ckh.oc.com
+172.28.110.15	prtu01	prtu01.ckh.oc.com
+172.28.110.16	smtpu01	smtpu01.ckh.oc.com
+172.28.110.17	apperpu01	apperpu01.ckh.oc.com
+172.28.110.18	apperpu02	apperpu02.ckh.oc.com
+172.28.110.19	dberpu01	dberpu01.ckh.oc.com
+172.28.110.20	uerp28	        uerp28.ckh.oc.com
+#172.28.110.21	uerp28db	uerp28db.ckh.oc.com
+172.28.110.19	uerp28db	uerp28db.ckh.oc.com
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orgbde1c6f" class="outline-3">
+<h3 id="orgbde1c6f">Create /etc/oraInst.loc If Not Exists</h3>
+<div class="outline-text-3" id="text-orgbde1c6f">
+<p>
+In two app nodes(apperpu01, apperpu02), create oraInst.loc file with content as following
+</p>
+<pre class="example">
+inventory_loc=/home/erp28/oraInventory
+inst_group=dba
+</pre>
+</div>
+</div>
+<div id="outline-container-orgea9b9dc" class="outline-3">
+<h3 id="orgea9b9dc">Data Disk Preparation</h3>
+<div class="outline-text-3" id="text-orgea9b9dc">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Node</th>
+<th scope="col" class="org-left">VG name</th>
+<th scope="col" class="org-left">LV name</th>
+<th scope="col" class="org-left">Size</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">dberpu01</td>
+<td class="org-left">vg_data</td>
+<td class="org-left">datalv</td>
+<td class="org-left">5TB</td>
+</tr>
+
+<tr>
+<td class="org-left">dberpu01</td>
+<td class="org-left">vg_stage</td>
+<td class="org-left">stagelv</td>
+<td class="org-left">2TB</td>
+</tr>
+
+<tr>
+<td class="org-left">dberpu01</td>
+<td class="org-left">vg_project</td>
+<td class="org-left">projectlv</td>
+<td class="org-left">40GB</td>
+</tr>
+
+<tr>
+<td class="org-left">apperpu01</td>
+<td class="org-left">vg_project</td>
+<td class="org-left">projectlv</td>
+<td class="org-left">300GB</td>
+</tr>
+
+<tr>
+<td class="org-left">apperpu02</td>
+<td class="org-left">vg_porject</td>
+<td class="org-left">projectlv</td>
+<td class="org-left">300GB</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgb10a8b7" class="outline-2">
+<h2 id="orgb10a8b7">Backup Preparation</h2>
+<div class="outline-text-2" id="text-orgb10a8b7">
+<p>
+Download from Object storage container `CKHHPOC', following is the core download method with which we compose batch download script
+</p>
+
+<pre class="example">
+Get the list
+$ curl -v -X GET -u franco.chong@oracle.com:Zaq1xsw2 \
+  https://a516732.storage.oraclecloud.com/v1/Storage-a516732/CKHHPOC/ &gt; ckhhpoc_full.list
+
+Download the file
+$ curl -v -X GET -O -u franco.chong@oracle.com:Zaq1xsw2 \
+  https://a516732.storage.oraclecloud.com/v1/Storage-a516732/CKHHPOC/oracle0929/dbbackup/incremental_0_0ssf3vpd_13_1
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org2101981" class="outline-2">
+<h2 id="org2101981">Database Restore and Recovery</h2>
+<div class="outline-text-2" id="text-org2101981">
+<p>
+Following tasks all done in node dberpu01
+</p>
+</div>
+
+<div id="outline-container-org5ef05f5" class="outline-3">
+<h3 id="org5ef05f5">Restore DB Software Backup from Stage</h3>
+<div class="outline-text-3" id="text-org5ef05f5">
+<pre class="example">
+$ tar zxvf /stage/CKHHPOC/oracle/filebackup/db_home_20170926.tar.gz -C /project/UERP28/db
+</pre>
+</div>
+</div>
+<div id="outline-container-org02e9dd4" class="outline-3">
+<h3 id="org02e9dd4">Modify TNS Network Files</h3>
+<div class="outline-text-3" id="text-org02e9dd4">
+<p>
+Revise following files under /project/UERP28/db/11.2.0/network/admin/UERP28_uerp28db with hostname uerp28db (virtual name)
+</p>
+
+<ol class="org-ol">
+<li>listener.ora</li>
+<li>sqlnet.ora</li>
+<li>tnsnames.ora</li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-org971a5e4" class="outline-3">
+<h3 id="org971a5e4">Enter RMAN</h3>
+<div class="outline-text-3" id="text-org971a5e4">
+<pre class="example">
+$ export TNS_ADMIN=/project/UERP28/db/11.2.0/network/admin/UERP28_uerp28db
+$ export ORACLE_HOME=/project/UERP28/db/11.2.0
+$ export ORACLE_SID=UERP28
+$ export PATH=$ORACLE_HOME/bin:$PATH
+</pre>
+
+<pre class="example">
+sqlplus / as sysdba
+SQL&gt; startup nomount
+SQL&gt; exit
+</pre>
+
+<pre class="example">
+rman target /
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org2f9d723" class="outline-3">
+<h3 id="org2f9d723">Restore Controlfile</h3>
+<div class="outline-text-3" id="text-org2f9d723">
+<pre class="example">
+RMAN&gt; restore controlfile from '/UERP28_db01/dbdump/arch/ctrl_0_1fsf4biq_1_1';
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org98bb9c1" class="outline-3">
+<h3 id="org98bb9c1">Restore Database</h3>
+<div class="outline-text-3" id="text-org98bb9c1">
+<pre class="example">
+RMAN&gt; catalog start with '/stage/CKHHPOC/oracle/dbbackup/' noprompt;
+RMAN&gt; set decryption identified by 'Welcome1';
+RMAN&gt; configure device type disk parallelism 16;
+RMAN&gt; restore database;
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org12a36f2" class="outline-3">
+<h3 id="org12a36f2">Prepare Incremental Archivelogs and Redologs</h3>
+<div class="outline-text-3" id="text-org12a36f2">
+<pre class="example">
+[erp28@dberpu01 stage]$ tar zxvf incremental_archivelogs.tar.gz -C /UERP28_db01/dbdump
+</pre>
+
+<pre class="example">
+[erp28@dberpu01 stage]$ tar zxvf redologs.tar.gz -C /UERP28_db01/data/
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orga8fb93d" class="outline-3">
+<h3 id="orga8fb93d">Recover Database</h3>
+<div class="outline-text-3" id="text-orga8fb93d">
+<pre class="example">
+RMAN&gt; recover database;
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org405a5df" class="outline-3">
+<h3 id="org405a5df">Open Database</h3>
+<div class="outline-text-3" id="text-org405a5df">
+<pre class="example">
+RMAN&gt; alter database open resetlogs;
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org0a20380" class="outline-3">
+<h3 id="org0a20380">Check</h3>
+<div class="outline-text-3" id="text-org0a20380">
+<pre class="example">
+SQL&gt; select to_char(max(last_update_date), 'YYYY/MM/DD HH:MI:SS') last_update_date from 
+     apps.fnd_concurrent_requests
+
+LAST_UPDATE_DATE
+-------------------
+2017/10/10 05:54:44
+
+</pre>
+
+<pre class="example">
+SQL&gt; c/gl/apps.gl
+  1* select name from apps.gl_je_headers where name like 'Test%Cloud%'
+SQL&gt; /
+
+NAME
+--------------------------------------------------------------------------------
+Test-Oracle Cloud POC
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org6f6281a" class="outline-2">
+<h2 id="org6f6281a">Configure DB</h2>
+<div class="outline-text-2" id="text-org6f6281a">
+<ol class="org-ol">
+<li><p>
+Run adcfgclone.pl
+</p>
+<pre class="example">
+$ cd /project/UERP28/db/11.2.0/appsutil/clone/bin 
+$ perl adcfgclone.pl dbTechStack
+</pre>
+
+<p>
+Input for the adcfgclone.pl command:
+</p>
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Prompt</th>
+<th scope="col" class="org-left">Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">apps password</td>
+<td class="org-left">apps0246</td>
+</tr>
+
+<tr>
+<td class="org-left">hostname</td>
+<td class="org-left">uerp28db</td>
+</tr>
+
+<tr>
+<td class="org-left">domain</td>
+<td class="org-left">ckh.oc.com</td>
+</tr>
+
+<tr>
+<td class="org-left">rac</td>
+<td class="org-left">n</td>
+</tr>
+
+<tr>
+<td class="org-left">sid</td>
+<td class="org-left">UERP28</td>
+</tr>
+
+<tr>
+<td class="org-left">base</td>
+<td class="org-left">/project/UERP28/db</td>
+</tr>
+
+<tr>
+<td class="org-left">utl_file_dir</td>
+<td class="org-left">`/UERP28_db01/dbdump/appl_tmp',</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">`/project/UERP28/dbdump/asw/temp',</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">`/project/UERP28/db/11.2.0/appsutil/outbound/UERP28_uerp28db'</td>
+</tr>
+
+<tr>
+<td class="org-left">port pool</td>
+<td class="org-left">7</td>
+</tr>
+</tbody>
+</table></li>
+
+<li>Start DB in open mode</li>
+
+<li><p>
+Run AutoConfig in the INSTE8_SETUP mode on the database tier as follows:
+</p>
+<pre class="example">
+$ perl /project/UERP28/db/11.2.0/appsutil/bin/adconfig.sh contextfile=&lt;CONTEXT_FILE&gt; \
+       run=INSTE8_SETUP
+</pre></li>
+
+<li><p>
+Run library update script
+</p>
+<pre class="example">
+$ cd /project/UERP28/db/11.2.0/appsutil/install/&lt;CONTEXT NAME&gt;
+$ sqlplus "/ as sysdba" @adupdlib.sql so
+</pre></li>
+
+<li><p>
+Configure Target database
+</p>
+<pre class="example">
+$ cd /project/UERP28/db/11.2.0/appsutil/clone/bin
+$ perl adcfgclone.pl dbconfig &lt;Database Target Context File&gt;
+</pre></li>
+</ol>
+</div>
+</div>
+<div id="outline-container-org5f9714c" class="outline-2">
+<h2 id="org5f9714c">Configure Primary App Tier</h2>
+<div class="outline-text-2" id="text-org5f9714c">
+</div>
+<div id="outline-container-orge6e7930" class="outline-3">
+<h3 id="orge6e7930">Restore App Tier Software Backup from Stage</h3>
+<div class="outline-text-3" id="text-orge6e7930">
+<p>
+Before clone, need restore fs_ne got from the customer (the reason is because of the customization by customer, the clone will be too time-consuming if fs_ne is not there, this is a special needs from CKHH)
+</p>
+<pre class="example">
+$ tar zxvf /stage/CKHHPOC/oracle/filebackup/fs2_EBSapps_20170926.tar.gz \
+      -C /project/UERP28/apps/fs2
+$ tar zxvf /stage/CKHHPOC/oracle/filebackup/fs_ne_EBSapps_20170926.tar.gz \
+      -C /project/UERP28/apps
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org86407e3" class="outline-3">
+<h3 id="org86407e3">Configure</h3>
+<div class="outline-text-3" id="text-org86407e3">
+<pre class="example">
+$ cd /project/UERP28/apps/fs2/EBSapps/comn/clone/bin
+$ perl adcfgclone.pl appsTier dualfs
+</pre>
+
+<p>
+Input for the adcfgclone.pl command:
+</p>
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Prompt</th>
+<th scope="col" class="org-left">Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">apps password</td>
+<td class="org-left">apps0246</td>
+</tr>
+
+<tr>
+<td class="org-left">weblogic password</td>
+<td class="org-left">wls02468</td>
+</tr>
+
+<tr>
+<td class="org-left">hostname</td>
+<td class="org-left">apperpu01</td>
+</tr>
+
+<tr>
+<td class="org-left">domain</td>
+<td class="org-left">ckh.oc.com</td>
+</tr>
+
+<tr>
+<td class="org-left">sid</td>
+<td class="org-left">UERP28</td>
+</tr>
+
+<tr>
+<td class="org-left">db node</td>
+<td class="org-left">uerp28db</td>
+</tr>
+
+<tr>
+<td class="org-left">domain</td>
+<td class="org-left">ckh.oc.com</td>
+</tr>
+
+<tr>
+<td class="org-left">base</td>
+<td class="org-left">/project/UERP28/apps</td>
+</tr>
+
+<tr>
+<td class="org-left">instance home</td>
+<td class="org-left">/project/UERP28/apps</td>
+</tr>
+
+<tr>
+<td class="org-left">preserve display</td>
+<td class="org-left">n</td>
+</tr>
+
+<tr>
+<td class="org-left">target system display</td>
+<td class="org-left">&lt;enter&gt;</td>
+</tr>
+
+<tr>
+<td class="org-left">web entry point services</td>
+<td class="org-left">enabled</td>
+</tr>
+
+<tr>
+<td class="org-left">web application services</td>
+<td class="org-left">enabled</td>
+</tr>
+
+<tr>
+<td class="org-left">system batch processing services</td>
+<td class="org-left">enabled</td>
+</tr>
+
+<tr>
+<td class="org-left">other services</td>
+<td class="org-left">disabled</td>
+</tr>
+
+<tr>
+<td class="org-left">the same port values as the source system</td>
+<td class="org-left">n</td>
+</tr>
+
+<tr>
+<td class="org-left">port pool</td>
+<td class="org-left">3</td>
+</tr>
+
+<tr>
+<td class="org-left">patching fs port pool</td>
+<td class="org-left">2</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org19e1b38" class="outline-2">
+<h2 id="org19e1b38">Prepare with CKHH Instructions before Configure Multinodes</h2>
+<div class="outline-text-2" id="text-org19e1b38">
+<p>
+Basically just following erp28_post_cloing_20171016.txt instructions from CKHH
+</p>
+</div>
+</div>
+<div id="outline-container-org96d1c18" class="outline-2">
+<h2 id="org96d1c18">Preclone in Primary App Node</h2>
+<div class="outline-text-2" id="text-org96d1c18">
+<ol class="org-ol">
+<li><p>
+In node apperpu01
+</p>
+<pre class="example">
+$ cd /project/UERP28/apps
+$ . EBSapps.env run
+$ perl $ADMIN_SCRIPTS_HOME/adpreclone.pl appsTier
+$ . EBSapps.env patch
+$ $ADMIN_SCRIPTS_HOME/adadminsrvctl.sh start forcepatchfs
+$ perl $ADMIN_SCRIPTS_HOME/adpreclone.pl appsTier
+</pre></li>
+
+<li>Stop  EBS services in apperpu01, package following directories and copy into to apperpu02, then unpack into the same directory structure.
+<ul class="org-ul">
+<li>/project/UERP28/apps/fs2/EBSapps</li>
+<li>/project/UERP28/apps/fs_ne</li>
+</ul></li>
+
+<li>Start all EBS services in apperpu01 including adminserver in patching filesystem.</li>
+</ol>
+</div>
+</div>
+<div id="outline-container-org0da3465" class="outline-2">
+<h2 id="org0da3465">Configure Secondary App Node</h2>
+<div class="outline-text-2" id="text-org0da3465">
+<ol class="org-ol">
+<li><p>
+run adcfgclone.pl
+</p>
+<pre class="example">
+$ cd /project/UERP28/apps/fs2/EBSapps/comn/clone/bin
+$ perl adcfgclone.pl appsTier dualfs
+</pre></li>
+
+<li><p>
+Add OTD information for secondary node by edit $CONTEXT_FILE
+</p>
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Parameter</th>
+<th scope="col" class="org-left">Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">s_url_protocol</td>
+<td class="org-left">https</td>
+</tr>
+
+<tr>
+<td class="org-left">s_local_url_protocol</td>
+<td class="org-left">https</td>
+</tr>
+
+<tr>
+<td class="org-left">s_webentryurlprotocol</td>
+<td class="org-left">https</td>
+</tr>
+
+<tr>
+<td class="org-left">s_webentryhost</td>
+<td class="org-left">uerp28</td>
+</tr>
+
+<tr>
+<td class="org-left">s_webentrydomain</td>
+<td class="org-left">hwl-ebis.com</td>
+</tr>
+
+<tr>
+<td class="org-left">s_active_webport</td>
+<td class="org-left">8828</td>
+</tr>
+
+<tr>
+<td class="org-left">s_login_page</td>
+<td class="org-left"><a href="https://uerp28.hwl-ebis.com:8828/OA_HTML/AppsLocalLogin.jsp">https://uerp28.hwl-ebis.com:8828/OA_HTML/AppsLocalLogin.jsp</a></td>
+</tr>
+
+<tr>
+<td class="org-left">s_external_url</td>
+<td class="org-left"><a href="https://uerp28.hwl-ebis.com:8828">https://uerp28.hwl-ebis.com:8828</a></td>
+</tr>
+</tbody>
+</table>
+
+<p>
+Then run autoconfig
+</p>
+
+<p>
+Basically, these values are consistent with the value configured for primary node in section <a href="#org19e1b38">Prepare with CKHH Instructions before Configure Multinodes</a>
+</p></li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-org3ece34e" class="outline-2">
+<h2 id="org3ece34e">Deregister Primary Node Information from Secondary Node</h2>
+<div class="outline-text-2" id="text-org3ece34e">
+<p>
+According to CKHH's needs, in secondary node:
+</p>
+<pre class="example">
+$ perl /project/UERP28/apps/fs2/EBSapps/appl/fnd/12.0.0/patch/115/bin/txkSetAppsConf.pl \
+     -contextfile=/project/UERP28/apps/fs2/inst/apps/UERP28_apperpu02/appl/admin/UERP28_apperpu02.xml \
+     -configoption=removeMS -oacore=apperpu01.ckh.oc.com:7204
+</pre>
+
+<p>
+In other side, there is no need to register secondary node information in primary node.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orge82e191" class="outline-2">
+<h2 id="orge82e191">Post Configuration with CKHH Instruction</h2>
+<div class="outline-text-2" id="text-orge82e191">
+<p>
+Basically just following erp28_post_cloing_20171016.txt instructions from CKHH. Especially we need to revise context file of secondary node just what we did in primary node.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgf83c00b" class="outline-2">
+<h2 id="orgf83c00b">Configure PCP</h2>
+<div class="outline-text-2" id="text-orgf83c00b">
+<ol class="org-ol">
+<li>Run update_erpuat_pcp.sql from CKHH (need fill actual primary and secondary node information into the script)</li>
+<li>Set the APPLDCP variable to ON in the context file of both nodes.</li>
+<li>Shutdown the application tier services of both the nodes and run AutoConfig on each node. After AutoConfig completes successfully verify that the tnsnames.ora (on both CP nodes) has the FNDFS entries of both the nodes.</li>
+<li>Ensure that the Internal Monitors on both nodes defined properly and have workshifts assigned to them. Also make sure the Internal Monitor manager is activated by going into Concurrent -&gt; Manager -&gt; Adminitrator and activate the manager as they need to be active on the nodes where the ICM can start in case of a failure..</li>
+</ol>
+</div>
+</div>
+
+    </div>
+  </body>
+</html>

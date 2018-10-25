@@ -1,48 +1,495 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8">
-        <title>Index</title>
-    </head>
-    <body>
-    <div>
-      <h2>Index</h2>
-      <h1>Blog!</h1>
+<!--[if lt IE 8 ]><html class="ie ie7" lang="en"> <![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en"> <![endif]-->
+<!--[if (gte IE 8)|!(IE)]><!--><html lang="en"> <!--<![endif]-->
+<head>
+
+   <!--- Basic Page Needs
+   ================================================== -->
+	<meta charset="utf-8">
+	<title>Freshpick</title>
+	<meta name="description" content="">
+	<meta name="author" content="">
+
+	<!-- CSS
+             ================================================== -->
+	<link rel="stylesheet" href="css/base.css">
+	<link rel="stylesheet" href="css/layout.css">
+        <link rel="stylesheet" href="css/styles.css">
+
+	<!--[if lt IE 9]>
+		<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+
+</head>
+
+<body>
+
+   <div id="content-wrap">
+
+      <!-- Header
+      ================================================== -->
+      <header class="container">
+
+         <hgroup>
+             <h1><a href="index.htm">Freshpick</a></h1>
+             <h3>Your Awesome Slogan Here</h3>
+         </hgroup>
 
 
-<h2>My Post updated automatically</h2>
+         <nav id="nav-wrap" class="cf">
 
-<a href="posts/done.html">My Post updated automatically</a>
+            <ul id="menu">
+                <li class="current"><a href="index.htm">Home</a></li>
+                <li><a href="style-demo.htm">Style Demo</a></li>
+                <li><a href="single-post.htm">Blog</a></li>
+                <li><a href="archives.htm">Archives</a></li>
+                <li><a href="#">Dropdown</a>
+                    <ul>
+                        <li><a href="#"><span>- </span>Submenu 01</a></li>
+                        <li><a href="#"><span>- </span>Submenu 02</a></li>
+                        <li><a href="#"><span>- </span>Submenu 03</a></li>
+                    </ul>
+                </li>
+               <li><a href="#">About</a></li>
+            </ul> <!-- end #menu -->
 
-<h2>我的第一个博客</h2>
+         </nav>
 
-<a href="posts/goodday.html">我的第一个博客</a>
+      </header>
 
-<h2>First Post</h2>
+      <!-- latest article
+           ================================================== -->
+      <article id="latest-article" class="container">
+          
+          <h2><a href="posts/example.html">First Post</a></h2>
+          <p class="post-info">by <span><a href="#">Erwin Aligam</a></span> &nbsp;
+              filed in <span><a href="#">typography</a>, <a href="#">designs</a>, <a href="#">projects</a></span>
+          </p>
 
-<a href="posts/gameover.html">First Post</a>
-
-<h2>Show me the time</h2>
-
-<a href="posts/great.html">Show me the time</a>
-
-<h2>First Post</h2>
-
-<a href="posts/cat.html">First Post</a>
-
-<h2>First Post</h2>
-
-<a href="posts/test.html">First Post</a>
-
-<h2>First Post</h2>
-
-<a href="posts/post-1.html">First Post</a>
-
-<h2>First Post</h2>
-
-<a href="posts/well.html">First Post</a>
+          <div class="dcontent cf">
+              <div class="org-content">
+                  
+                  <div id="outline-container-orgcb8575f" class="outline-2">
+<h2 id="orgcb8575f">OS Preparation</h2>
+<div class="outline-text-2" id="text-orgcb8575f">
+</div>
+<div id="outline-container-org432b812" class="outline-3">
+<h3 id="org432b812">Create VM Instances</h3>
+<div class="outline-text-3" id="text-org432b812">
+<table>
 
 
-    </div>
-  </body>
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+
+<col  class="org-right">
+
+<col  class="org-right">
+
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">Name</th>
+<th scope="col" class="org-left">Shape</th>
+<th scope="col" class="org-right">Pub ip</th>
+<th scope="col" class="org-right">Priv ip</th>
+<th scope="col" class="org-left">Data disk</th>
+<th scope="col" class="org-left">Usage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">dberp01</td>
+<td class="org-left">oc6</td>
+<td class="org-right">129.150.102.93</td>
+<td class="org-right">172.28.110.19</td>
+<td class="org-left">5TB + 2TB stage</td>
+<td class="org-left">DB</td>
+</tr>
+
+<tr>
+<td class="org-left">apperpu01</td>
+<td class="org-left">oc4</td>
+<td class="org-right">129.150.101.41</td>
+<td class="org-right">172.28.110.17</td>
+<td class="org-left">300GB</td>
+<td class="org-left">Primary EBS node</td>
+</tr>
+
+<tr>
+<td class="org-left">apperpu02</td>
+<td class="org-left">oc4</td>
+<td class="org-right">129.150.101.53</td>
+<td class="org-right">172.18.110.18</td>
+<td class="org-left">300GB</td>
+<td class="org-left">Secondary EBS node</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div id="outline-container-orgd250b78" class="outline-3">
+<h3 id="orgd250b78">User</h3>
+<div class="outline-text-3" id="text-orgd250b78">
+<p>
+In all nodes
+</p>
+<pre class="example">
+$ sudo useradd erp28 -u 2328
+$ sudo groupadd dba -g 23
+$ sudo usermod -g dba erp28
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orge54ba99" class="outline-3">
+<h3 id="orge54ba99">Package</h3>
+<div class="outline-text-3" id="text-orge54ba99">
+<ol class="org-ol">
+<li><p>
+Revis...
+                  
+              </div>
+
+              <p class="continue cf"><a class="button" href="">Continue Reading</a></p>
+
+              <div class="post-meta">
+
+                  <p class="dateinfo">
+                      14
+                      <span class="dmonth">Mar</span>
+                      <span class="dyear">2013</span>
+                  </p>
+
+                  <div class="comments">
+                      <a href="#" title="comment on...">12</a>
+                  </div>
+
+              </div>
+
+          </div>
+      </article>
+
+      <!-- more articles
+      ================================================== -->
+      <div id="more-articles" class="container">
+          
+          <article class="cf">
+              <div class="grid4 a-left first">
+                  <h3><a href="posts/example.html">First Post</a></h3>
+                  <p>2018-10-25 07:37:06 +0000</p>
+              </div>
+
+              <div class="grid8 a-right">
+
+                  <p>
+                      <a href="posts/example.html">Read More...</a> </p>
+
+                  <div class="comments">
+                      <a href="#" title="comment on...">11</a>
+                  </div>
+
+              </div>
+          </article>
+          
+          <article class="cf">
+              <div class="grid4 a-left first">
+                  <h3><a href="posts/done.html">My Post updated automatically</a></h3>
+                  <p>2018-10-24 07:37:06 +0000</p>
+              </div>
+
+              <div class="grid8 a-right">
+
+                  <p>
+                      <a href="posts/done.html">Read More...</a> </p>
+
+                  <div class="comments">
+                      <a href="#" title="comment on...">11</a>
+                  </div>
+
+              </div>
+          </article>
+          
+          <article class="cf">
+              <div class="grid4 a-left first">
+                  <h3><a href="posts/goodday.html">我的第一个博客</a></h3>
+                  <p>2018-10-24 07:37:06 +0000</p>
+              </div>
+
+              <div class="grid8 a-right">
+
+                  <p>
+                      <a href="posts/goodday.html">Read More...</a> </p>
+
+                  <div class="comments">
+                      <a href="#" title="comment on...">11</a>
+                  </div>
+
+              </div>
+          </article>
+          
+          <article class="cf">
+              <div class="grid4 a-left first">
+                  <h3><a href="posts/gameover.html">First Post</a></h3>
+                  <p>2018-10-24 07:37:06 +0000</p>
+              </div>
+
+              <div class="grid8 a-right">
+
+                  <p>
+                      <a href="posts/gameover.html">Read More...</a> </p>
+
+                  <div class="comments">
+                      <a href="#" title="comment on...">11</a>
+                  </div>
+
+              </div>
+          </article>
+          
+          <article class="cf">
+              <div class="grid4 a-left first">
+                  <h3><a href="posts/great.html">Show me the time</a></h3>
+                  <p>2018-10-24 07:37:06 +0000</p>
+              </div>
+
+              <div class="grid8 a-right">
+
+                  <p>
+                      <a href="posts/great.html">Read More...</a> </p>
+
+                  <div class="comments">
+                      <a href="#" title="comment on...">11</a>
+                  </div>
+
+              </div>
+          </article>
+          
+          <article class="cf">
+              <div class="grid4 a-left first">
+                  <h3><a href="posts/cat.html">First Post</a></h3>
+                  <p>2018-10-23 07:37:06 +0000</p>
+              </div>
+
+              <div class="grid8 a-right">
+
+                  <p>
+                      <a href="posts/cat.html">Read More...</a> </p>
+
+                  <div class="comments">
+                      <a href="#" title="comment on...">11</a>
+                  </div>
+
+              </div>
+          </article>
+          
+          <article class="cf">
+              <div class="grid4 a-left first">
+                  <h3><a href="posts/test.html">First Post</a></h3>
+                  <p>2018-10-23 07:37:06 +0000</p>
+              </div>
+
+              <div class="grid8 a-right">
+
+                  <p>
+                      <a href="posts/test.html">Read More...</a> </p>
+
+                  <div class="comments">
+                      <a href="#" title="comment on...">11</a>
+                  </div>
+
+              </div>
+          </article>
+          
+          <article class="cf">
+              <div class="grid4 a-left first">
+                  <h3><a href="posts/post-1.html">First Post</a></h3>
+                  <p>2018-10-23 07:37:06 +0000</p>
+              </div>
+
+              <div class="grid8 a-right">
+
+                  <p>
+                      <a href="posts/post-1.html">Read More...</a> </p>
+
+                  <div class="comments">
+                      <a href="#" title="comment on...">11</a>
+                  </div>
+
+              </div>
+          </article>
+          
+          <article class="cf">
+              <div class="grid4 a-left first">
+                  <h3><a href="posts/well.html">First Post</a></h3>
+                  <p>2018-10-23 07:37:06 +0000</p>
+              </div>
+
+              <div class="grid8 a-right">
+
+                  <p>
+                      <a href="posts/well.html">Read More...</a> </p>
+
+                  <div class="comments">
+                      <a href="#" title="comment on...">11</a>
+                  </div>
+
+              </div>
+          </article>
+          
+      </div>
+
+      <!-- search section
+      ================================================== -->
+      <div id="search-section" class="container">
+         <form class="cf">
+
+            <div class="grid4 a-left first">
+               <label for="regularInput">Search the site</label>
+            </div>
+
+            <div class="grid8 a-right">
+               <input type="text" id="regularInput">
+               <button type="submit">GO</button>
+            </div>
+
+         </form>
+      </div>
+
+   </div> <!-- end content-wrap -->
+
+   <!-- footer
+   ================================================== -->
+   <footer class="container">
+
+      <div class="grid3 first">
+
+         <div class="footer-logo">
+            <a href="#"><img src="images/footer-logo.png"></a>
+         </div>
+
+         <p>Proin gravida nibh vel velit auctor aliquet. Aenean sollicitudin, lorem quis bibendum auctor,
+         nisi elit consequat ipsum, nec sagittis sem nibh id elit. Duis sed odio sit amet nibh vulputate cursus a sit amet mauris.
+         Morbi accumsan ipsum velit. Nam nec tellus a odio tincidunt auctor a ornare odio. <a href="#">Learn More</a> </p>
+
+         <h3>social</h3>
+
+            <ul class="social-links cf">
+				   <li class="twitter"><a href="#">Twitter</a></li>
+				   <li class="facebook"><a href="#">Facebook</a></li>
+				   <li class="google"><a href="#">Google</a></li>
+				   <li class="instagram"><a href="#">Instagram</a></li>
+				   <li class="dribble"><a href="#">Dribble</a></li>
+			   </ul>
+
+      </div>
+
+      <div class="grid3">
+
+         <h3>Latest Tweets</h3>
+
+            <ul id="twitter">
+               <li>
+                  <span>
+                  This is Photoshop's version  of Lorem Ipsum. Proin gravida nibh vel velit auctor aliquet.
+                  Aenean sollicitudin, lorem quis bibendum auctor, nisi elit consequat ipsum
+                  <a href="#">http://t.co/CGIrdxIlI3</a>
+                  </span>
+                  <b><a href="#">2 Days Ago</a></b>
+               </li>
+               <li>
+                  <span>
+                  This is Photoshop's version  of Lorem Ipsum. Proin gravida nibh vel velit auctor aliquet.
+                  Aenean sollicitudin, lorem quis bibendum auctor, nisi elit consequat ipsum
+                  <a href="#">http://t.co/CGIrdxIlI3</a>
+                  </span>
+                  <b><a href="#">3 Days Ago</a></b>
+               </li>
+            </ul>
+
+      </div>
+
+      <div class="grid3">
+
+         <h3>Explore our site</h3>
+
+            <ul class="link-list">
+               <li><a href="#">Home</a></li>
+               <li><a href="#">Style Demo</a></li>
+               <li><a href="#">Blog</a></li>
+               <li><a href="#">Archives</a></li>
+               <li><a href="#">Support</a></li>
+               <li><a href="#">About</a></li>
+            </ul>
+
+         <h3>Resources</h3>
+
+            <ul class="link-list">
+               <li><a title="Site Templates" href="http://themeforest.net?ref=ealigam">ThemeForest</a></li>
+					<li><a title="Website Templates" href="http://www.4templates.com/?go=228858961">4Templates</a></li>
+					<li><a title="Web Templates" href="http://store.templatemonster.com?aff=ealigam">TemplateMonster</a></li>
+					<li><a title="Stock Graphics" href="http://graphicriver.net?ref=ealigam">GraphicRiver</a></li>
+					<li><a title="Web Hosting" href="http://www.dreamhost.com/r.cgi?287326">Dreamhost</a></li>
+               <li><a title="Create Your Own Website" href="http://www.wix.com/html5/websites_400?utm_campaign=af_styleshout.com&experiment_id=af_styleshout.com_html1">Create Your Own Website</a></li>
+            </ul>
+
+      </div>
+
+      <div class="grid3">
+
+         <h3>Photostream</h3>
+
+            <ul class="photostream">
+               <li><a href="#"><img width="60" height="60" alt="thumbnail" src="images/thumb.jpg"></a></li>
+               <li><a href="#"><img width="60" height="60" alt="thumbnail" src="images/thumb.jpg"></a></li>
+               <li><a href="#"><img width="60" height="60" alt="thumbnail" src="images/thumb.jpg"></a></li>
+               <li><a href="#"><img width="60" height="60" alt="thumbnail" src="images/thumb.jpg"></a></li>
+               <li><a href="#"><img width="60" height="60" alt="thumbnail" src="images/thumb.jpg"></a></li>
+               <li><a href="#"><img width="60" height="60" alt="thumbnail" src="images/thumb.jpg"></a></li>
+            </ul>
+
+         <h3>Contact Info</h3>
+
+		   <p>
+		   <strong>Phone: </strong>+1234567<br>
+		   <strong>Fax: </strong>+123456789<br>
+		   <strong>Address: </strong>123 Put Your Address Here<br>
+         <strong>E-mail: </strong>me@freshpick.com
+         </p>
+
+         <p>Want more info - go to our <a href="#">contact page</a></p>
+
+	   </div>
+
+      <!-- footer-bottom
+      ================================================== -->
+      <div id="footer-bottom" class="grid12 first">
+
+	      <p>
+         2013 Copyright Info &nbsp; &nbsp; &nbsp;
+		   Design by <a href="http://www.styleshout.com/">styleshout</a>
+         </p>
+
+         <!-- Back To Top Button -->
+         <div id="go-top"><a href="#" title="Back to Top">Go To Top</a></div>
+
+      </div>
+
+   </footer>
+
+   <!-- Java Script
+   ================================================== -->
+   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+   <script>window.jQuery || document.write('<script src="js/jquery-1.10.2.min.js"><\/script>')</script>
+
+   <script src="js/custom.js"></script>
+
+</body>
+
 </html>

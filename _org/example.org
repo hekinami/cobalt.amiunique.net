@@ -1,0 +1,328 @@
+#+TITLE: Steps for EBS Migration To OPC for CKHH
+#+AUTHOR: Oracle
+#+OPTIONS: ^:nil toc:nil
+#+BEGIN_EXPORT html
+title: First Post
+published_date: "2018-10-25 07:37:06 +0000"
+layout: default.liquid
+is_draft: false
+---
+#+END_EXPORT
+
+* OS Preparation
+** Create VM Instances
+   | Name      | Shape |         Pub ip |       Priv ip | Data disk       | Usage              |
+   |-----------+-------+----------------+---------------+-----------------+--------------------|
+   | dberp01   | oc6   | 129.150.102.93 | 172.28.110.19 | 5TB + 2TB stage | DB                 |
+   | apperpu01 | oc4   | 129.150.101.41 | 172.28.110.17 | 300GB           | Primary EBS node   |
+   | apperpu02 | oc4   | 129.150.101.53 | 172.18.110.18 | 300GB           | Secondary EBS node |
+
+** User
+   In all nodes
+   #+BEGIN_EXAMPLE
+     $ sudo useradd erp28 -u 2328
+     $ sudo groupadd dba -g 23
+     $ sudo usermod -g dba erp28
+   #+END_EXAMPLE
+
+** Package
+   1. Revise /etc/yum.repos.d/public-yum-ol6.repo in all nodes. Modify the `ol6_addons' section as following
+      #+BEGIN_EXAMPLE
+        [ol6_addons]
+        name=Oracle Linux $releasever Add ons ($basearch)
+        baseurl=http://public-yum.oracle.com/repo/OracleLinux/OL6/addons/$basearch/
+        gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-oracle
+        gpgcheck=1
+        enabled=1
+      #+END_EXAMPLE
+   2. In DB node dberpu01
+      #+BEGIN_EXAMPLE
+        $ sudo yum install oracle-rdbms-server-11gR2-preinstall.x86_64
+      #+END_EXAMPLE
+   
+   3. In app tier nodes apperpu01, apperpu02
+      #+BEGIN_EXAMPLE
+        $ sudo yum install oracle-ebs-server-R12-preinstall.x86_64
+      #+END_EXAMPLE
+
+   4. Upgrade this package to prevent potential LVM related problems.
+      #+BEGIN_EXAMPLE
+        $ sudo yum upgrade device-mapper-libs
+      #+END_EXAMPLE
+
+   5. Install the following packages for remote operations
+      #+BEGIN_EXAMPLE
+        $ sudo yum install tigervnc-server xterm twm
+      #+END_EXAMPLE
+
+** Revise /etc/security/limits.conf
+   In all nodes, replace `oracle' with `erp28'
+
+** Revise /etc/hosts
+   Add the following content to all nodes
+   #+BEGIN_EXAMPLE
+     172.28.110.11	otdu01	otdu01.ckh.oc.com
+     172.28.110.12	otdu02	otdu02.ckh.oc.com
+     172.28.110.13	ftpu01	ftpu01.ckh.oc.com
+     172.28.110.14	ftpu02	ftpu02.ckh.oc.com
+     172.28.110.15	prtu01	prtu01.ckh.oc.com
+     172.28.110.16	smtpu01	smtpu01.ckh.oc.com
+     172.28.110.17	apperpu01	apperpu01.ckh.oc.com
+     172.28.110.18	apperpu02	apperpu02.ckh.oc.com
+     172.28.110.19	dberpu01	dberpu01.ckh.oc.com
+     172.28.110.20	uerp28	        uerp28.ckh.oc.com
+     #172.28.110.21	uerp28db	uerp28db.ckh.oc.com
+     172.28.110.19	uerp28db	uerp28db.ckh.oc.com
+   #+END_EXAMPLE
+
+** Create /etc/oraInst.loc If Not Exists
+   In two app nodes(apperpu01, apperpu02), create oraInst.loc file with content as following
+   #+BEGIN_EXAMPLE
+     inventory_loc=/home/erp28/oraInventory
+     inst_group=dba
+   #+END_EXAMPLE
+** Data Disk Preparation
+   | Node      | VG name    | LV name   | Size  |
+   |-----------+------------+-----------+-------|
+   | dberpu01  | vg_data    | datalv    | 5TB   |
+   | dberpu01  | vg_stage   | stagelv   | 2TB   |
+   | dberpu01  | vg_project | projectlv | 40GB  |
+   | apperpu01 | vg_project | projectlv | 300GB |
+   | apperpu02 | vg_porject | projectlv | 300GB |
+
+* Backup Preparation
+  Download from Object storage container `CKHHPOC', following is the core download method with which we compose batch download script
+
+  #+BEGIN_EXAMPLE
+    Get the list
+    $ curl -v -X GET -u franco.chong@oracle.com:Zaq1xsw2 \
+      https://a516732.storage.oraclecloud.com/v1/Storage-a516732/CKHHPOC/ > ckhhpoc_full.list
+
+    Download the file
+    $ curl -v -X GET -O -u franco.chong@oracle.com:Zaq1xsw2 \
+      https://a516732.storage.oraclecloud.com/v1/Storage-a516732/CKHHPOC/oracle0929/dbbackup/incremental_0_0ssf3vpd_13_1
+  #+END_EXAMPLE
+
+* Database Restore and Recovery
+  Following tasks all done in node dberpu01
+
+** Restore DB Software Backup from Stage
+   #+BEGIN_EXAMPLE
+     $ tar zxvf /stage/CKHHPOC/oracle/filebackup/db_home_20170926.tar.gz -C /project/UERP28/db
+   #+END_EXAMPLE
+** Modify TNS Network Files
+   Revise following files under /project/UERP28/db/11.2.0/network/admin/UERP28_uerp28db with hostname uerp28db (virtual name)
+
+   1. listener.ora
+   2. sqlnet.ora
+   3. tnsnames.ora
+
+** Enter RMAN
+   #+BEGIN_EXAMPLE
+     $ export TNS_ADMIN=/project/UERP28/db/11.2.0/network/admin/UERP28_uerp28db
+     $ export ORACLE_HOME=/project/UERP28/db/11.2.0
+     $ export ORACLE_SID=UERP28
+     $ export PATH=$ORACLE_HOME/bin:$PATH
+   #+END_EXAMPLE
+
+   #+BEGIN_EXAMPLE
+     sqlplus / as sysdba
+     SQL> startup nomount
+     SQL> exit
+   #+END_EXAMPLE
+
+   #+BEGIN_EXAMPLE
+     rman target /
+   #+END_EXAMPLE
+
+** Restore Controlfile
+   #+BEGIN_EXAMPLE
+     RMAN> restore controlfile from '/UERP28_db01/dbdump/arch/ctrl_0_1fsf4biq_1_1';
+   #+END_EXAMPLE
+
+** Restore Database
+   #+BEGIN_EXAMPLE
+     RMAN> catalog start with '/stage/CKHHPOC/oracle/dbbackup/' noprompt;
+     RMAN> set decryption identified by 'Welcome1';
+     RMAN> configure device type disk parallelism 16;
+     RMAN> restore database;
+   #+END_EXAMPLE
+
+** Prepare Incremental Archivelogs and Redologs
+   #+BEGIN_EXAMPLE
+     [erp28@dberpu01 stage]$ tar zxvf incremental_archivelogs.tar.gz -C /UERP28_db01/dbdump
+   #+END_EXAMPLE
+
+   #+BEGIN_EXAMPLE
+     [erp28@dberpu01 stage]$ tar zxvf redologs.tar.gz -C /UERP28_db01/data/
+   #+END_EXAMPLE
+
+** Recover Database
+   #+BEGIN_EXAMPLE
+     RMAN> recover database;
+   #+END_EXAMPLE
+
+** Open Database
+   #+BEGIN_EXAMPLE
+     RMAN> alter database open resetlogs;
+   #+END_EXAMPLE
+
+** Check
+   #+BEGIN_EXAMPLE
+     SQL> select to_char(max(last_update_date), 'YYYY/MM/DD HH:MI:SS') last_update_date from 
+          apps.fnd_concurrent_requests
+
+     LAST_UPDATE_DATE
+     -------------------
+     2017/10/10 05:54:44
+
+   #+END_EXAMPLE
+
+   #+BEGIN_EXAMPLE
+     SQL> c/gl/apps.gl
+       1* select name from apps.gl_je_headers where name like 'Test%Cloud%'
+     SQL> /
+
+     NAME
+     --------------------------------------------------------------------------------
+     Test-Oracle Cloud POC
+
+   #+END_EXAMPLE
+
+* Configure DB
+  1. Run adcfgclone.pl
+     #+BEGIN_EXAMPLE
+       $ cd /project/UERP28/db/11.2.0/appsutil/clone/bin 
+       $ perl adcfgclone.pl dbTechStack
+     #+END_EXAMPLE
+
+     Input for the adcfgclone.pl command:
+     | Prompt        | Value                                                         |
+     |---------------+---------------------------------------------------------------|
+     | apps password | apps0246                                                      |
+     | hostname      | uerp28db                                                      |
+     | domain        | ckh.oc.com                                                    |
+     | rac           | n                                                             |
+     | sid           | UERP28                                                        |
+     | base          | /project/UERP28/db                                            |
+     | utl_file_dir  | `/UERP28_db01/dbdump/appl_tmp',                               |
+     |               | `/project/UERP28/dbdump/asw/temp',                            |
+     |               | `/project/UERP28/db/11.2.0/appsutil/outbound/UERP28_uerp28db' |
+     | port pool     | 7                                                             |
+
+  2. Start DB in open mode
+
+  3. Run AutoConfig in the INSTE8_SETUP mode on the database tier as follows:
+     #+BEGIN_EXAMPLE
+       $ perl /project/UERP28/db/11.2.0/appsutil/bin/adconfig.sh contextfile=<CONTEXT_FILE> \
+              run=INSTE8_SETUP
+     #+END_EXAMPLE
+
+  4. Run library update script
+     #+BEGIN_EXAMPLE
+       $ cd /project/UERP28/db/11.2.0/appsutil/install/<CONTEXT NAME>
+       $ sqlplus "/ as sysdba" @adupdlib.sql so
+     #+END_EXAMPLE
+
+  5. Configure Target database
+     #+BEGIN_EXAMPLE
+       $ cd /project/UERP28/db/11.2.0/appsutil/clone/bin
+       $ perl adcfgclone.pl dbconfig <Database Target Context File>
+     #+END_EXAMPLE
+* Configure Primary App Tier
+** Restore App Tier Software Backup from Stage
+   Before clone, need restore fs_ne got from the customer (the reason is because of the customization by customer, the clone will be too time-consuming if fs_ne is not there, this is a special needs from CKHH)
+   #+BEGIN_EXAMPLE
+     $ tar zxvf /stage/CKHHPOC/oracle/filebackup/fs2_EBSapps_20170926.tar.gz \
+           -C /project/UERP28/apps/fs2
+     $ tar zxvf /stage/CKHHPOC/oracle/filebackup/fs_ne_EBSapps_20170926.tar.gz \
+           -C /project/UERP28/apps
+   #+END_EXAMPLE
+
+** Configure
+  #+BEGIN_EXAMPLE
+    $ cd /project/UERP28/apps/fs2/EBSapps/comn/clone/bin
+    $ perl adcfgclone.pl appsTier dualfs
+  #+END_EXAMPLE
+  
+  Input for the adcfgclone.pl command:
+  | Prompt                                    | Value                |
+  |-------------------------------------------+----------------------|
+  | apps password                             | apps0246             |
+  | weblogic password                         | wls02468             |
+  | hostname                                  | apperpu01            |
+  | domain                                    | ckh.oc.com           |
+  | sid                                       | UERP28               |
+  | db node                                   | uerp28db             |
+  | domain                                    | ckh.oc.com           |
+  | base                                      | /project/UERP28/apps |
+  | instance home                             | /project/UERP28/apps |
+  | preserve display                          | n                    |
+  | target system display                     | <enter>              |
+  | web entry point services                  | enabled              |
+  | web application services                  | enabled              |
+  | system batch processing services          | enabled              |
+  | other services                            | disabled             |
+  | the same port values as the source system | n                    |
+  | port pool                                 | 3                    |
+  | patching fs port pool                     | 2                    |
+
+* Prepare with CKHH Instructions before Configure Multinodes
+  Basically just following erp28_post_cloing_20171016.txt instructions from CKHH
+* Preclone in Primary App Node
+  1. In node apperpu01
+     #+BEGIN_EXAMPLE
+       $ cd /project/UERP28/apps
+       $ . EBSapps.env run
+       $ perl $ADMIN_SCRIPTS_HOME/adpreclone.pl appsTier
+       $ . EBSapps.env patch
+       $ $ADMIN_SCRIPTS_HOME/adadminsrvctl.sh start forcepatchfs
+       $ perl $ADMIN_SCRIPTS_HOME/adpreclone.pl appsTier
+     #+END_EXAMPLE
+
+  2. Stop  EBS services in apperpu01, package following directories and copy into to apperpu02, then unpack into the same directory structure.
+     - /project/UERP28/apps/fs2/EBSapps
+     - /project/UERP28/apps/fs_ne
+
+  3. Start all EBS services in apperpu01 including adminserver in patching filesystem.
+* Configure Secondary App Node
+  1. run adcfgclone.pl
+     #+BEGIN_EXAMPLE
+       $ cd /project/UERP28/apps/fs2/EBSapps/comn/clone/bin
+       $ perl adcfgclone.pl appsTier dualfs
+     #+END_EXAMPLE
+
+  2. Add OTD information for secondary node by edit $CONTEXT_FILE
+     | Parameter             | Value                                                       |
+     |-----------------------+-------------------------------------------------------------|
+     | s_url_protocol        | https                                                       |
+     | s_local_url_protocol  | https                                                       |
+     | s_webentryurlprotocol | https                                                       |
+     | s_webentryhost        | uerp28                                                      |
+     | s_webentrydomain      | hwl-ebis.com                                                |
+     | s_active_webport      | 8828                                                        |
+     | s_login_page          | https://uerp28.hwl-ebis.com:8828/OA_HTML/AppsLocalLogin.jsp |
+     | s_external_url        | https://uerp28.hwl-ebis.com:8828                            |
+    
+      Then run autoconfig
+    
+      Basically, these values are consistent with the value configured for primary node in section [[Prepare with CKHH Instructions before Configure Multinodes]]
+
+* Deregister Primary Node Information from Secondary Node
+  According to CKHH's needs, in secondary node:
+  #+BEGIN_EXAMPLE
+    $ perl /project/UERP28/apps/fs2/EBSapps/appl/fnd/12.0.0/patch/115/bin/txkSetAppsConf.pl \
+         -contextfile=/project/UERP28/apps/fs2/inst/apps/UERP28_apperpu02/appl/admin/UERP28_apperpu02.xml \
+         -configoption=removeMS -oacore=apperpu01.ckh.oc.com:7204
+  #+END_EXAMPLE
+
+  In other side, there is no need to register secondary node information in primary node.
+
+* Post Configuration with CKHH Instruction
+  Basically just following erp28_post_cloing_20171016.txt instructions from CKHH. Especially we need to revise context file of secondary node just what we did in primary node.
+
+* Configure PCP
+  1. Run update_erpuat_pcp.sql from CKHH (need fill actual primary and secondary node information into the script)
+  1. Set the APPLDCP variable to ON in the context file of both nodes.
+  2. Shutdown the application tier services of both the nodes and run AutoConfig on each node. After AutoConfig completes successfully verify that the tnsnames.ora (on both CP nodes) has the FNDFS entries of both the nodes.
+  3. Ensure that the Internal Monitors on both nodes defined properly and have workshifts assigned to them. Also make sure the Internal Monitor manager is activated by going into Concurrent -> Manager -> Adminitrator and activate the manager as they need to be active on the nodes where the ICM can start in case of a failure..

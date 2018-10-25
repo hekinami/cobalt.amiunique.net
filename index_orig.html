@@ -1,0 +1,9 @@
+layout: default.liquid
+---
+<h1>Blog!</h1>
+
+{% for post in collections.posts.pages %}
+<h2>{{post.title}}</h2>
+
+<a href="{{ post.permalink }}">{{ post.title }}</a>
+{% endfor %}
