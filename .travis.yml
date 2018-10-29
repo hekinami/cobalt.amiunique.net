@@ -10,5 +10,22 @@ script:
   - git add .
   - git commit -m "test"
   - git push
+  - cd ..
   - echo "deploy into tencent"
-  - echo ~
+  - mkdir -p ~/.ssh
+  - chmod 700 ~/.ssh
+  - rm -rf ~/.ssh/config
+  - echo "Host git.dev.tencent.com" > ~/.ssh/config
+  - echo "User git" >> ~/.ssh/config
+  - echo "StrictHostKeyChecking no" >> ~/.ssh/config
+  - echo "IdentityFile ~/id_rsa" >> ~/.ssh/config
+  - echo "IdentitiesOnly yes" >> ~/.ssh/config
+  - echo -e ${TENCENT_PRIV_KEY} > ~/id_rsa
+  - chmod 600 ~/id_rsa
+  - git clone git@git.dev.tencent.com:hekinami/amiunique.net.git tencent
+  - rsync -av --delete --exclude=.git --exclude=CNAME _site/ tencent
+  - cd tencent
+  - git add .
+  - git commit -m "test"
+  - git push
+  
