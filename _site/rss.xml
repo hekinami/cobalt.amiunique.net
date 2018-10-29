@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"><channel><title>cobalt blog</title><link>http://localhost:3000</link><description>Blog Posts Go Here</description><item><title>First Post</title><link>http://localhost:3000/posts/example.html</link><description><![CDATA[<div id="outline-container-orgcb8575f" class="outline-2">
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"><channel><title>cobalt blog</title><link>http://example.com</link><description>Blog Posts Go Here</description><item><title>First Post</title><link>http://example.com/posts/example.html</link><description><![CDATA[<div id="outline-container-orgcb8575f" class="outline-2">
 <h2 id="orgcb8575f">OS Preparation</h2>
 <div class="outline-text-2" id="text-orgcb8575f">
 </div>
 <div id="outline-container-org432b812" class="outline-3">
 <h3 id="org432b812">Create VM Instances</h3>
 <div class="outline-text-3" id="text-org432b812">
-<table>]]></description><guid>http://localhost:3000/posts/example.html</guid><pubDate>Thu, 25 Oct 2018 07:37:06 +0000</pubDate></item><item><title>My Post updated automatically</title><link>http://localhost:3000/posts/done.html</link><description><![CDATA[<div id="outline-container-orgdc244f1" class="outline-2">
+<table>]]></description><guid>http://example.com/posts/example.html</guid><pubDate>Thu, 25 Oct 2018 07:37:06 +0000</pubDate></item><item><title>My Post updated automatically</title><link>http://example.com/posts/done.html</link><description><![CDATA[<div id="outline-container-orgdc244f1" class="outline-2">
     <h2 id="orgdc244f1">Headline 1</h2>
     <div class="outline-text-2" id="text-orgdc244f1">
         Interdum varius sit amet, mattis vulputate enim nulla aliquet porttitor. Neque, volutpat ac tincidunt vitae, semper quis lectus nulla at volutpat diam ut venenatis tellus in metus vulputate eu scelerisque.
@@ -15,16 +15,16 @@
         <div class="outline-text-3" id="text-org1037701">
             <p>
                 This is a test line!
-            </p>]]></description><guid>http://localhost:3000/posts/done.html</guid><pubDate>Wed, 24 Oct 2018 07:37:06 +0000</pubDate></item><item><title>我的第一个博客</title><link>http://localhost:3000/posts/goodday.html</link><description><![CDATA[<p>
+            </p>]]></description><guid>http://example.com/posts/done.html</guid><pubDate>Wed, 24 Oct 2018 07:37:06 +0000</pubDate></item><item><title>我的第一个博客</title><link>http://example.com/posts/goodday.html</link><description><![CDATA[<p>
 从我的角度来看，这真是一个很好的开始
 </p>
-]]></description><guid>http://localhost:3000/posts/goodday.html</guid><pubDate>Wed, 24 Oct 2018 07:37:06 +0000</pubDate></item><item><title>First Post</title><link>http://localhost:3000/posts/gameover.html</link><description><![CDATA[<div id="outline-container-org89d054b" class="outline-2">
+]]></description><guid>http://example.com/posts/goodday.html</guid><pubDate>Wed, 24 Oct 2018 07:37:06 +0000</pubDate></item><item><title>First Post</title><link>http://example.com/posts/gameover.html</link><description><![CDATA[<div id="outline-container-org89d054b" class="outline-2">
 <h2 id="org89d054b">Great!</h2>
 </div>
-]]></description><guid>http://localhost:3000/posts/gameover.html</guid><pubDate>Wed, 24 Oct 2018 07:37:06 +0000</pubDate></item><item><title>Show me the time</title><link>http://localhost:3000/posts/great.html</link><description><![CDATA[<div id="outline-container-org564a22e" class="outline-2">
+]]></description><guid>http://example.com/posts/gameover.html</guid><pubDate>Wed, 24 Oct 2018 07:37:06 +0000</pubDate></item><item><title>Show me the time</title><link>http://example.com/posts/great.html</link><description><![CDATA[<div id="outline-container-org564a22e" class="outline-2">
 <h2 id="org564a22e">Show me the money</h2>
 </div>
-]]></description><guid>http://localhost:3000/posts/great.html</guid><pubDate>Wed, 24 Oct 2018 07:37:06 +0000</pubDate></item><item><title>First Post</title><link>http://localhost:3000/posts/cat.html</link><description><![CDATA[<div id="outline-container-orgf00ed5a" class="outline-2">
+]]></description><guid>http://example.com/posts/great.html</guid><pubDate>Wed, 24 Oct 2018 07:37:06 +0000</pubDate></item><item><title>First Post</title><link>http://example.com/posts/cat.html</link><description><![CDATA[<div id="outline-container-orgf00ed5a" class="outline-2">
 <h2 id="orgf00ed5a">Long long ago, there lived a king</h2>
 <div class="outline-text-2" id="text-orgf00ed5a">
 </div>
@@ -33,7 +33,7 @@
 <div class="outline-text-3" id="text-orgc1e48c3">
 <p>
 This is a test line! Well done
-</p>]]></description><guid>http://localhost:3000/posts/cat.html</guid><pubDate>Tue, 23 Oct 2018 07:37:06 +0000</pubDate></item><item><title>First Post</title><link>http://localhost:3000/posts/test.html</link><description><![CDATA[<div id="outline-container-org84f3908" class="outline-2">
+</p>]]></description><guid>http://example.com/posts/cat.html</guid><pubDate>Tue, 23 Oct 2018 07:37:06 +0000</pubDate></item><item><title>First Post</title><link>http://example.com/posts/test.html</link><description><![CDATA[<div id="outline-container-org84f3908" class="outline-2">
 <h2 id="org84f3908">Headline 1</h2>
 <div class="outline-text-2" id="text-org84f3908">
 </div>
@@ -42,7 +42,7 @@ This is a test line! Well done
 <div class="outline-text-3" id="text-org074b0e3">
 <p>
 This is a test line!
-</p>]]></description><guid>http://localhost:3000/posts/test.html</guid><pubDate>Tue, 23 Oct 2018 07:37:06 +0000</pubDate></item><item><title>First Post</title><link>http://localhost:3000/posts/post-1.html</link><description><![CDATA[<h1>This is our first Post!</h1>]]></description><guid>http://localhost:3000/posts/post-1.html</guid><pubDate>Tue, 23 Oct 2018 07:37:06 +0000</pubDate></item><item><title>First Post</title><link>http://localhost:3000/posts/well.html</link><description><![CDATA[<div id="outline-container-org83703c5" class="outline-2">
+</p>]]></description><guid>http://example.com/posts/test.html</guid><pubDate>Tue, 23 Oct 2018 07:37:06 +0000</pubDate></item><item><title>First Post</title><link>http://example.com/posts/post-1.html</link><description><![CDATA[<h1>This is our first Post!</h1>]]></description><guid>http://example.com/posts/post-1.html</guid><pubDate>Tue, 23 Oct 2018 07:37:06 +0000</pubDate></item><item><title>First Post</title><link>http://example.com/posts/well.html</link><description><![CDATA[<div id="outline-container-org83703c5" class="outline-2">
 <h2 id="org83703c5">Headline 1</h2>
 <div class="outline-text-2" id="text-org83703c5">
 </div>
@@ -51,4 +51,4 @@ This is a test line!
 <div class="outline-text-3" id="text-org8fc44b9">
 <p>
 This is a test line!
-</p>]]></description><guid>http://localhost:3000/posts/well.html</guid><pubDate>Tue, 23 Oct 2018 07:37:06 +0000</pubDate></item></channel></rss>
+</p>]]></description><guid>http://example.com/posts/well.html</guid><pubDate>Tue, 23 Oct 2018 07:37:06 +0000</pubDate></item></channel></rss>

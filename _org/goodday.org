@@ -1,9 +1,0 @@
-#+BEGIN_EXPORT html
-title: 我的第一个博客
-published_date: "2018-10-24 07:37:06 +0000"
-layout: default.liquid
-is_draft: false
----
-#+END_EXPORT
-
-从我的角度来看，这真是一个很好的开始

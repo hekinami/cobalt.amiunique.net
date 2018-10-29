@@ -4,7 +4,7 @@
 #+BEGIN_EXPORT html
 title: First Post
 published_date: "2018-10-25 07:37:06 +0000"
-layout: default.liquid
+layout: post.liquid
 is_draft: false
 ---
 #+END_EXPORT
