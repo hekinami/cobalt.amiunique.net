@@ -3,9 +3,12 @@ script:
   - git config --global user.email "hekinami@amiunique.net"
   - git config --global user.name "Zou Bibo"
   - pwd
+  - echo "deploy into github"
   - git clone https://${ACCESS_TOKEN}@github.com/hekinami/amiunique.net.git
   - rsync -av --delete --exclude=.git --exclude=CNAME _site/ amiunique.net
   - cd amiunique.net
   - git add .
   - git commit -m "test"
   - git push
+  - echo "deploy into tencent"
+  - echo ~
