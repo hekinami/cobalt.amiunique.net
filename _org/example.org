@@ -8,7 +8,7 @@ layout: post.liquid
 is_draft: false
 ---
 #+END_EXPORT
-
+n
 * OS Preparation
 ** Create VM Instances
    | Name      | Shape |         Pub ip |       Priv ip | Data disk       | Usage              |
@@ -326,3 +326,4 @@ is_draft: false
   1. Set the APPLDCP variable to ON in the context file of both nodes.
   2. Shutdown the application tier services of both the nodes and run AutoConfig on each node. After AutoConfig completes successfully verify that the tnsnames.ora (on both CP nodes) has the FNDFS entries of both the nodes.
   3. Ensure that the Internal Monitors on both nodes defined properly and have workshifts assigned to them. Also make sure the Internal Monitor manager is activated by going into Concurrent -> Manager -> Adminitrator and activate the manager as they need to be active on the nodes where the ICM can start in case of a failure..
+* New tips
