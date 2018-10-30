@@ -24,8 +24,8 @@ script:
   - chmod 600 ~/id_rsa
   - git clone git@gitlab.com:hekinami/hekinami.git gitlab
   - rsync -av --delete --exclude=.git --exclude=CNAME _site/ gitlab/public
+  - cp .gitlab-ci.yml gitlab
   - cd gitlab
-  - cp public/.gitlab-ci.yml .
   - git add .
   - git commit -m "test"
   - git push
