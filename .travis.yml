@@ -15,15 +15,15 @@ script:
   - mkdir -p ~/.ssh
   - chmod 700 ~/.ssh
   - rm -rf ~/.ssh/config
-  - echo "Host git.dev.tencent.com" > ~/.ssh/config
+  - echo "Host gitlab.com" > ~/.ssh/config
   - echo "User git" >> ~/.ssh/config
   - echo "StrictHostKeyChecking no" >> ~/.ssh/config
   - echo "IdentityFile ~/id_rsa" >> ~/.ssh/config
   - echo "IdentitiesOnly yes" >> ~/.ssh/config
   - echo -e ${TENCENT_PRIV_KEY} > ~/id_rsa
   - chmod 600 ~/id_rsa
-  - git clone git@gitlab.com:hekinami/amiunique.net.git gitlab
-  - rsync -av --delete --exclude=.git --exclude=CNAME _site/ gitlab
+  - git clone git@gitlab.com:hekinami/hekinami.git gitlab
+  - rsync -av --delete --exclude=.git --exclude=CNAME _site/ gitlab/public
   - cd gitlab
   - git add .
   - git commit -m "test"
