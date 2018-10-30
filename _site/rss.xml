@@ -1,6 +1,6 @@
-<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"><channel><title>cobalt blog</title><link>http://example.com</link><description>Blog Posts Go Here</description><item><title>First Post</title><link>http://example.com/posts/example.html</link><description><![CDATA[<p>
-n
-</p>
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"><channel><title>cobalt blog</title><link>http://example.com</link><description>Blog Posts Go Here</description><item><title>First Post</title><link>http://example.com/posts/example.html</link><description><![CDATA[<div id="outline-container-org997be36" class="outline-2">
+<h2 id="org997be36">this is a book</h2>
+</div>
 <div id="outline-container-orgcb8575f" class="outline-2">
 <h2 id="orgcb8575f">OS Preparation</h2>
 <div class="outline-text-2" id="text-orgcb8575f">
