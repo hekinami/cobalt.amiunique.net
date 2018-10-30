@@ -4,15 +4,7 @@ script:
   - git config --global user.name "Zou Bibo"
   - pwd
   - COMMIT_MSG=$(git log -1 --pretty=%s)
-  - echo "deploy into github"
-  - git clone https://${ACCESS_TOKEN}@github.com/hekinami/amiunique.net.git
-  - rsync -av --delete --exclude=.git --exclude=CNAME _site/ amiunique.net
-  - cd amiunique.net
-  - git add .
-  - git commit -m "${COMMIT_MSG}"
-  - git push
-  - cd ..
-  - echo "deploy into gitlab"
+  - echo "Deploy into gitlab"
   - mkdir -p ~/.ssh
   - chmod 700 ~/.ssh
   - rm -rf ~/.ssh/config
@@ -21,7 +13,7 @@ script:
   - echo "StrictHostKeyChecking no" >> ~/.ssh/config
   - echo "IdentityFile ~/id_rsa" >> ~/.ssh/config
   - echo "IdentitiesOnly yes" >> ~/.ssh/config
-  - echo -e ${TENCENT_PRIV_KEY} > ~/id_rsa
+  - echo -e ${GITLAB_PRIV_KEY} > ~/id_rsa
   - chmod 600 ~/id_rsa
   - git clone git@gitlab.com:hekinami/hekinami.git gitlab
   - rsync -av --delete --exclude=.git --exclude=CNAME _site/ gitlab/public
