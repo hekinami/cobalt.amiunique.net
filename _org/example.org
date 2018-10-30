@@ -327,3 +327,5 @@ is_draft: false
   2. Shutdown the application tier services of both the nodes and run AutoConfig on each node. After AutoConfig completes successfully verify that the tnsnames.ora (on both CP nodes) has the FNDFS entries of both the nodes.
   3. Ensure that the Internal Monitors on both nodes defined properly and have workshifts assigned to them. Also make sure the Internal Monitor manager is activated by going into Concurrent -> Manager -> Adminitrator and activate the manager as they need to be active on the nodes where the ICM can start in case of a failure..
 * New tips
+* Now give a a five
+  [[file:./images/642e9311-408a-4905-8b92-087507dceb20.png]]
