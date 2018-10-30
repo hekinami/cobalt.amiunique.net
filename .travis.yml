@@ -3,12 +3,13 @@ script:
   - git config --global user.email "hekinami@amiunique.net"
   - git config --global user.name "Zou Bibo"
   - pwd
+  - COMMIT_MSG=$(git log -1 --pretty=%s)
   - echo "deploy into github"
   - git clone https://${ACCESS_TOKEN}@github.com/hekinami/amiunique.net.git
   - rsync -av --delete --exclude=.git --exclude=CNAME _site/ amiunique.net
   - cd amiunique.net
   - git add .
-  - git commit -m "test"
+  - git commit -m "${COMMIT_MSG}"
   - git push
   - cd ..
   - echo "deploy into gitlab"
@@ -27,6 +28,6 @@ script:
   - cp .gitlab-ci.yml gitlab
   - cd gitlab
   - git add .
-  - git commit -m "test"
+  - git commit -m "${COMMIT_MSG}"
   - git push
   
