@@ -11,7 +11,7 @@ script:
   - git commit -m "test"
   - git push
   - cd ..
-  - echo "deploy into tencent"
+  - echo "deploy into gitlab"
   - mkdir -p ~/.ssh
   - chmod 700 ~/.ssh
   - rm -rf ~/.ssh/config
@@ -22,9 +22,9 @@ script:
   - echo "IdentitiesOnly yes" >> ~/.ssh/config
   - echo -e ${TENCENT_PRIV_KEY} > ~/id_rsa
   - chmod 600 ~/id_rsa
-  - git clone git@git.dev.tencent.com:hekinami/amiunique.net.git tencent
-  - rsync -av --delete --exclude=.git --exclude=CNAME _site/ tencent
-  - cd tencent
+  - git clone git@gitlab.com:hekinami/amiunique.net.git gitlab
+  - rsync -av --delete --exclude=.git --exclude=CNAME _site/ gitlab
+  - cd gitlab
   - git add .
   - git commit -m "test"
   - git push
